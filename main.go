@@ -11,13 +11,11 @@ import (
 )
 
 func main() {
-	// needs to receive arg from api endpoint
 	router := mux.NewRouter()
 	router.HandleFunc("/speed/{url}", GetSpeed).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
-// private
 func fetchUrl(url string) time.Duration {
 	start := time.Now()
 	_, err := http.Get(url)
