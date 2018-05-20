@@ -3,15 +3,18 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 	"time"
 )
 
 func main() {
 	// needs to receive arg from api endpoint
-	var time = fetchUrl("www.example.com")
-	fmt.Println(time)
+	router := mux.NewRouter()
+	router.HandleFunc("/speed/{url}", GetSpeed).Methods("GET")
+	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
 // private
@@ -23,4 +26,10 @@ func fetchUrl(url string) time.Duration {
 	}
 	// Use responses, like in this thread? https://stackoverflow.com/questions/30526946/time-http-response-in-go
 	return time.Since(start)
+}
+
+func GetSpeed(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	time := fetchUrl(params["url"])
+	json.NewEncoder(w).Encode(time)
 }
