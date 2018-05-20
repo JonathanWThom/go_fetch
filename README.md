@@ -1,10 +1,11 @@
 # Go Fetch
 
-Send a url, and receive the time it took to fetch it back. For example:
+Send a url, and receive the time it took to fetch it back.
 
 ## Implementation
 
 `git clone && cd go_fetch`
+
 `go run`
 
 Visit: `http://localhost:8000/speed/www.google.com`
