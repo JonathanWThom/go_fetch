@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -16,14 +18,16 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
-func fetchUrl(url string) time.Duration {
+func fetchUrl(url string) float64 {
 	start := time.Now()
-	_, err := http.Get(url)
+	fullUrl := strings.Join([]string{"http://"}, url)
+	res, err := http.Get(fullUrl)
 	if err != nil {
 		log.Fatal(err)
+		os.Exit(1)
 	}
-	// Use responses, like in this thread? https://stackoverflow.com/questions/30526946/time-http-response-in-go
-	return time.Since(start)
+	defer res.Body.Close()
+	return time.Since(start).Seconds()
 }
 
 func GetSpeed(w http.ResponseWriter, r *http.Request) {
