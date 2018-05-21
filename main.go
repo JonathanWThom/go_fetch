@@ -20,7 +20,7 @@ func fetchUrl(url string) time.Duration {
 	start := time.Now()
 	_, err := http.Get(url)
 	if err != nil {
-		// handle it
+		log.Fatal(err)
 	}
 	// Use responses, like in this thread? https://stackoverflow.com/questions/30526946/time-http-response-in-go
 	return time.Since(start)
