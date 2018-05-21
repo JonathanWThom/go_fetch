@@ -31,6 +31,13 @@ func fetchUrl(url string) float64 {
 
 func GetSpeed(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	time := fetchUrl(params["url"])
-	json.NewEncoder(w).Encode(time)
+	var total float64
+	for i := 0; i < 10; i++ {
+		total += fetchUrl(params["url"])
+	}
+	avg := total / 10
+	// This should return an json object of all tested values
+	// Do them all at once (with a channel) rather than in sequence
+	// Otherwise, it's a long API call
+	json.NewEncoder(w).Encode(avg)
 }
