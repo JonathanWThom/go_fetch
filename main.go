@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 )
 
@@ -19,8 +18,8 @@ func main() {
 }
 
 func fetchUrl(url string) float64 {
+	fullUrl := "http://" + url
 	start := time.Now()
-	fullUrl := strings.Join([]string{"http://"}, url)
 	res, err := http.Get(fullUrl)
 	if err != nil {
 		log.Fatal(err)
