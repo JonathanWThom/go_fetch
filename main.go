@@ -17,7 +17,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
 
-func fetchUrl(url string) float64 {
+func fetchUrl(url string, ch chan<- float64) {
 	fullUrl := "http://" + url
 	start := time.Now()
 	res, err := http.Get(fullUrl)
@@ -26,18 +26,18 @@ func fetchUrl(url string) float64 {
 		os.Exit(1)
 	}
 	defer res.Body.Close()
-	return time.Since(start).Seconds()
+	ch <- time.Since(start).Seconds()
 }
 
 func GetSpeed(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	var total float64
+	ch := make(chan float64)
 	for i := 0; i < 10; i++ {
-		total += fetchUrl(params["url"])
+		go fetchUrl(params["url"], ch)
 	}
+	total += <-ch
 	avg := total / 10
 	// This should return an json object of all tested values
-	// Do them all at once (with a channel) rather than in sequence
-	// Otherwise, it's a long API call
 	json.NewEncoder(w).Encode(avg)
 }
